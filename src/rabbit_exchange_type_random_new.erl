@@ -8,10 +8,10 @@
 %% the License for the specific language governing rights and
 %% limitations under the License.
 %%
-%% The Original Code is RabbitMQ.
+%% The Original Code is RabbitMQ Consistent Hash Exchange.
 %%
-%% The Initial Developer of the Original Code is VMware, Inc.
-%% Copyright (c) 2007-2011 VMware, Inc.  All rights reserved.
+%% The Initial Developer of the Original Code is GoPivotal, Inc.
+%% Copyright (c) 2011-2014 GoPivotal, Inc. All rights reserved.
 %%
 
 -module(rabbit_exchange_type_random_new).
@@ -20,20 +20,11 @@
 
 -behaviour(rabbit_exchange_type).
 
--export([
-  add_binding/3, 
-  assert_args_equivalence/2,
-  create/2, 
-  delete/3, 
-  policy_changed/2,
-  description/0, 
-  recover/2, 
-  remove_bindings/3,
-  validate_binding/2,
-  route/2,
-  serialise_events/0,
-  validate/1
-]).
+-export([description/0, serialise_events/0, route/2]).
+-export([validate/1, validate_binding/2,
+         create/2, delete/3, policy_changed/2,
+         add_binding/3, remove_bindings/3, assert_args_equivalence/2]).
+-export([init/0]).
 
 -rabbit_boot_step({?MODULE, [
   {description,   "exchange type random new"},
@@ -64,7 +55,7 @@ route(#exchange{name = Name},
 validate(_X) -> ok.
 validate_binding(_X, _B) -> ok.
 create(_Tx, _X) -> ok.
-recover(_X, _Bs) -> ok.
+%recover(_X, _Bs) -> ok.
 delete(_Tx, _X, _Bs) -> ok.
 policy_changed(_X1, _X2) -> ok.
 add_binding(_Tx, _X, _B) -> ok.
