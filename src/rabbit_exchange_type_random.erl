@@ -14,13 +14,14 @@
 %% Copyright (c) 2007-2011 VMware, Inc.  All rights reserved.
 %%
 
--module(rabbit_exchange_type_random).
+-module(rabbit_exchange_type_random_new).
 -behaviour(rabbit_exchange_type).
 -include_lib("rabbit_common/include/rabbit.hrl").
 
 -rabbit_boot_step({?MODULE, [
-  {description,   "exchange type random"},
-  {mfa,           {rabbit_registry, register, [exchange, <<"x-random">>, ?MODULE]}},
+  {description,   "exchange type random new"},
+  {mfa,           {rabbit_registry, register, [exchange, <<"x-random-new">>, ?MODULE]}},
+  {cleanup, {rabbit_registry, unregister, [exchange, <<"x-random-new">>]}},
   {requires,      rabbit_registry},
   {enables,       kernel_ready}
 ]}).
@@ -41,10 +42,12 @@
 ]).
 
 description() ->
-    [{name, <<"x-random">>}, {description, <<"AMQP random exchange. Like a direct exchange, but randomly chooses who to route to.">>}].
+    [{name, <<"x-random-new">>}, {description, <<"AMQP random exchange new. Like a direct exchange, but randomly chooses who to route to.">>}].
 
-route(_X=#exchange{name = Name},
-      _D=#delivery{message = #basic_message{routing_keys = Routes}}) ->
+serialise_events() -> false.
+
+route(#exchange{name = Name},
+      #delivery{message = #basic_message{routing_keys = Routes}}) ->
     Matches = rabbit_router:match_routing_key(Name, Routes),
     %io:format("exchange: ~p~n", [X]),
     %io:format("delivery: ~p~n", [D]),
@@ -56,10 +59,9 @@ route(_X=#exchange{name = Name},
         [lists:nth(Rand, Matches)]
     end.
 
-serialise_events() -> false.
 validate(_X) -> ok.
 create(_Tx, _X) -> ok.
-recover(_X, _Bs) -> ok.
+%recover(_X, _Bs) -> ok.
 delete(_Tx, _X, _Bs) -> ok.
 policy_changed(_X1, _X2) -> ok.
 add_binding(_Tx, _X, _B) -> ok.
