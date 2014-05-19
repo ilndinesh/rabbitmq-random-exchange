@@ -1,6 +1,6 @@
-{application, random_exchange,
+{application, random_exchange_new,
  [
-  {description, "RabbitMQ Random Exchange Plugin"},
+  {description, "RabbitMQ Random Exchange Plugin New"},
   {vsn, "0.1.0"},
   {modules, []},
   {registered, []},
