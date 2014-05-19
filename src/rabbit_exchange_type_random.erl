@@ -20,14 +20,6 @@
 
 -behaviour(rabbit_exchange_type).
 
--rabbit_boot_step({?MODULE, [
-  {description,   "exchange type random new"},
-  {mfa,           {rabbit_registry, register, [exchange, <<"x-random-new">>, ?MODULE]}},
-  {cleanup, {rabbit_registry, unregister, [exchange, <<"x-random-new">>]}},
-  {requires,      rabbit_registry},
-  {enables,       kernel_ready}
-]}).
-
 -export([
   add_binding/3, 
   assert_args_equivalence/2,
@@ -42,6 +34,14 @@
   serialise_events/0,
   validate/1
 ]).
+
+-rabbit_boot_step({?MODULE, [
+  {description,   "exchange type random new"},
+  {mfa,           {rabbit_registry, register, [exchange, <<"x-random-new">>, ?MODULE]}},
+  {cleanup, {rabbit_registry, unregister, [exchange, <<"x-random-new">>]}},
+  {requires,      rabbit_registry},
+  {enables,       kernel_ready}
+]}).
 
 description() ->
     [{name, <<"x-random-new">>}, {description, <<"AMQP random exchange new. Like a direct exchange, but randomly chooses who to route to.">>}].
@@ -62,12 +62,12 @@ route(#exchange{name = Name},
     end.
 
 validate(_X) -> ok.
+validate_binding(_X, _B) -> ok.
 create(_Tx, _X) -> ok.
-%recover(_X, _Bs) -> ok.
+recover(_X, _Bs) -> ok.
 delete(_Tx, _X, _Bs) -> ok.
 policy_changed(_X1, _X2) -> ok.
 add_binding(_Tx, _X, _B) -> ok.
 remove_bindings(_Tx, _X, _Bs) -> ok.
-validate_binding(_X, _B) -> ok.
 assert_args_equivalence(X, Args) ->
     rabbit_exchange:assert_args_equivalence(X, Args).
