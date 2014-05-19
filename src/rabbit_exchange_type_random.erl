@@ -15,8 +15,10 @@
 %%
 
 -module(rabbit_exchange_type_random_new).
--behaviour(rabbit_exchange_type).
+
 -include_lib("rabbit_common/include/rabbit.hrl").
+
+-behaviour(rabbit_exchange_type).
 
 -rabbit_boot_step({?MODULE, [
   {description,   "exchange type random new"},
