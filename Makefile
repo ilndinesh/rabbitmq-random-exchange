@@ -1,4 +1,4 @@
-PACKAGE=random-exchange
+PACKAGE=random-exchange-new
 DIST_DIR=dist
 EBIN_DIR=ebin
 INCLUDE_DIRS=include
