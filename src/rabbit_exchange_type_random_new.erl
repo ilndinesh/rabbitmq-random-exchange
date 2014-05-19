@@ -14,7 +14,7 @@
 %% Copyright (c) 2011-2014 GoPivotal, Inc. All rights reserved.
 %%
 
--module(rabbit_exchange_type_random_new).
+-module(rabbit_exchange_type_random_all).
 
 -include_lib("rabbit_common/include/rabbit.hrl").
 
@@ -24,32 +24,29 @@
 -export([validate/1, validate_binding/2,
          create/2, delete/3, policy_changed/2,
          add_binding/3, remove_bindings/3, assert_args_equivalence/2]).
--export([init/0]).
+%-export([init/0]).
 
 -rabbit_boot_step({?MODULE, [
-  {description,   "exchange type random new"},
-  {mfa,           {rabbit_registry, register, [exchange, <<"x-random-new">>, ?MODULE]}},
-  {cleanup, {rabbit_registry, unregister, [exchange, <<"x-random-new">>]}},
+  {description,   "exchange type random all"},
+  {mfa,           {rabbit_registry, register, [exchange, <<"x-random-all">>, ?MODULE]}},
+  {cleanup, {rabbit_registry, unregister, [exchange, <<"x-random-all">>]}},
   {requires,      rabbit_registry},
   {enables,       kernel_ready}
 ]}).
 
 description() ->
-    [{name, <<"x-random-new">>}, {description, <<"AMQP random exchange new. Like a direct exchange, but randomly chooses who to route to.">>}].
+    [{name, <<"x-random-all">>}, {description, <<"AMQP random exchange all. Like a direct exchange, but randomly chooses who to route to.">>}].
 
 serialise_events() -> false.
 
 route(#exchange{name = Name},
       #delivery{message = #basic_message{routing_keys = Routes}}) ->
-    Matches = rabbit_router:match_routing_key(Name, Routes),
-    %io:format("exchange: ~p~n", [X]),
-    %io:format("delivery: ~p~n", [D]),
-    %io:format("matches: ~p~n", [Matches]),
-    case length(Matches) of
-      Len when Len < 2 -> Matches;
+    Qs = rabbit_router:match_routing_key(Name, ['_']),
+    case length(Qs) of
+      Len when Len < 2 -> Qs;
       Len ->
         Rand = crypto:rand_uniform(1, Len + 1),
-        [lists:nth(Rand, Matches)]
+        [lists:nth(Rand, Qs)]
     end.
 
 validate(_X) -> ok.
@@ -62,4 +59,4 @@ add_binding(_Tx, _X, _B) -> ok.
 remove_bindings(_Tx, _X, _Bs) -> ok.
 assert_args_equivalence(X, Args) ->
     rabbit_exchange:assert_args_equivalence(X, Args).
-init() -> ok.
+%init() -> ok.
