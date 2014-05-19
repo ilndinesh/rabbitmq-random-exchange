@@ -11,7 +11,7 @@ interested.
 
 ### Installation
 
-    git clone git://github.com/jbrisbin/random-exchange.git
+    git clone git://github.com/ilndinesh/random-exchange.git
     cd random-exchange
     make package
     cp dist/*.ez $RABBITMQ_HOME/plugins
