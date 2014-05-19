@@ -62,3 +62,4 @@ add_binding(_Tx, _X, _B) -> ok.
 remove_bindings(_Tx, _X, _Bs) -> ok.
 assert_args_equivalence(X, Args) ->
     rabbit_exchange:assert_args_equivalence(X, Args).
+init() -> ok.
